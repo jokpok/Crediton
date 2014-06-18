@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {{M}}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <th>Банк</th>
+                <th>сайт</th>
+                <th>телефоны</th>
+            </thead>
+            <tbody>
+                {% for bank in banks %}
+                <tr>
+                    <td><img src="{{bank.get_logo_url}}" /> {{bank.name}}</td>
+                    <td>{{bank.site}}</td>
+                    <td>{{bank.phones}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

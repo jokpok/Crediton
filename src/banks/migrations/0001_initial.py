@@ -1,0 +1,40 @@
+# -*- coding: utf-8 -*-
+from south.utils import datetime_utils as datetime
+from south.db import db
+from south.v2 import SchemaMigration
+from django.db import models
+
+
+class Migration(SchemaMigration):
+
+    def forwards(self, orm):
+        # Adding model 'Bank'
+        db.create_table(u'banks_bank', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('site', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('phones', self.gf('django.db.models.fields.CharField')(max_length=500)),
+            ('logo', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('rating', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+        ))
+        db.send_create_signal(u'banks', ['Bank'])
+
+
+    def backwards(self, orm):
+        # Deleting model 'Bank'
+        db.delete_table(u'banks_bank')
+
+
+    models = {
+        u'banks.bank': {
+            'Meta': {'object_name': 'Bank'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'logo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
+            'phones': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
+            'rating': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'site': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        }
+    }
+
+    complete_apps = ['banks']

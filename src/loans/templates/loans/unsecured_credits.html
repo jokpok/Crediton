@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block jquery %}
+$('#total_id').bind("change keyup input click", function() {
+    if (this.value.match(/[^0-9]/g)) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    }
+});
+{% endblock %}
+
+{% block content %}
+<h3><em>Найди лучшее предложение</em></h3>
+<div class="row">
+<div class="col-lg-12 col-md-12">
+    <form action="" method="POST" class="form-inline" role="form">{% csrf_token %}
+        <div class="form-group">
+            <label class="sr-only" for="total_id">сумма</label>
+            <input type="" class="form-control" id="total_id" value="{% if total %}{{total}}{% else %}сумма{% endif %}" placeholder="{% if total %}{{total}}{% else %}сумма{% endif %}" name="total">
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="currency">
+                <option value="KZT">KZT</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" name="term" placeholder="срок">
+                <option {% if term == 1 %}selected{% endif %} value="1">1 месяц</option>
+                <option {% if term == 3 %}selected{% endif %} value="3">3 месяц</option>
+                <option {% if term == 6 %}selected{% endif %} value="6">6 месяц</option>
+                <option {% if term == 9 %}selected{% endif %} value="9">9 месяц</option>
+                <option {% if not term %}selected{% endif %} value="12">1 год</option>
+                <option {% if term == 18 %}selected{% endif %} value="18">1,5 года</option>
+                <option {% if term == 24 %}selected{% endif %} value="24">2 года</option>
+                <option {% if term == 36 %}selected{% endif %} value="36">3 года</option>
+                <option {% if term == 48 %}selected{% endif %} value="48">4 года</option>
+                <option {% if term == 60 %}selected{% endif %} value="60">5 года</option>
+            </select>
+        </div>
+    
+    <input class="btn btn-default" type="submit" value="Найти"/>
+    </form>
+</div>    
+</div>  
+<br />
+<div class="row">   
+<div class="col-lg-12 col-md-12">
+    {% for credit in credits %}
+    <div class="well">
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <img src="{{credit.bank.get_logo_url}}" class="img-responsive"/>
+                </div>
+                <div class="col-lg-9 col-md-3 col-sm-3">
+                    <p><b>{{credit.name}}{{sm_p}}<br/>{{over}}</b></p>
+                    <ul>
+                        <li>ГЭСВ: {{credit.gasv}}%</li>
+                        <li>Срок: до {{credit.term}} месяцев</li>
+                        <li>Максимальная сумма: {{credit.max_sum|intcomma}} тг</li>
+                        <li>Минимальная сумма: {{credit.min_sum|intcomma}} тг</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8">
+            <em>Месячный платеж:</em>
+            <div class="progress">
+              <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{credit.monthly_percent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{credit.monthly_percent}}%">
+                <span class="sr-only">20% Complete</span>
+                {{credit.monthly|intcomma}} тг
+              </div>
+            </div>
+            <em>Переплата:</em>
+            <div class="progress">
+              <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{credit.overpayment_percent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{credit.overpayment_percent}}%">
+                <span class="sr-only">60% Complete (warning)</span>
+                {{credit.overpayment|intcomma}} тг
+              </div>
+            </div>           
+        </div>
+    </div>
+    </div>
+    {% endfor %}
+</div>
+</div> 
+{% endblock %}
